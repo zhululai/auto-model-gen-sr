@@ -1,0 +1,123 @@
+{
+    "directed": true,
+    "multigraph": false,
+    "graph": [
+        [
+            "name",
+            "Cyclic Arena"
+        ],
+        [
+            "start_stations",
+            [
+                "S1"
+            ]
+        ],
+        [
+            "end_stations",
+            [
+                "S4"
+            ]
+        ],
+        [
+            "wip_limits",
+            [
+                6
+            ]
+        ],
+        [
+            "generation_time",
+            78.22751092910767
+        ]
+    ],
+    "nodes": [
+        {
+            "index": 0,
+            "frequency": 16540,
+            "buffer_capacity": 4,
+            "machine_capacity": 2,
+            "processing_time": {
+                "mean": 100.30367188917783,
+                "std": 49.78917292240789
+            },
+            "id": "S2"
+        },
+        {
+            "index": 1,
+            "frequency": 6544,
+            "buffer_capacity": 3,
+            "machine_capacity": 1,
+            "processing_time": {
+                "mean": 49.935656426715504,
+                "std": 24.9559009138977
+            },
+            "id": "S3"
+        },
+        {
+            "index": 2,
+            "frequency": 9996,
+            "buffer_capacity": 4,
+            "machine_capacity": 1,
+            "processing_time": {
+                "mean": 75.06192476990816,
+                "std": 37.76648011619462
+            },
+            "id": "S4"
+        },
+        {
+            "index": 3,
+            "frequency": 9997,
+            "buffer_capacity": 0,
+            "machine_capacity": 1,
+            "processing_time": {
+                "mean": 75.82933173269289,
+                "std": 37.930919595025166
+            },
+            "id": "S1"
+        }
+    ],
+    "adjacency": [
+        [
+            {
+                "frequency": 6543,
+                "routing_probability": 0.39558645707376056,
+                "transfer_time": {
+                    "mean": 9.978021978021976,
+                    "std": 2.0440710394540385
+                },
+                "id": "S3"
+            },
+            {
+                "frequency": 9997,
+                "routing_probability": 0.6044135429262394,
+                "transfer_time": {
+                    "mean": 10.012886597938143,
+                    "std": 2.055112748720239
+                },
+                "id": "S4"
+            }
+        ],
+        [
+            {
+                "frequency": 6544,
+                "routing_probability": 1.0,
+                "transfer_time": {
+                    "mean": 10.069792221630278,
+                    "std": 2.058817588048125
+                },
+                "id": "S2"
+            }
+        ],
+        [],
+        [
+            {
+                "frequency": 9997,
+                "routing_probability": 1.0,
+                "transfer_time": {
+                    "mean": 10.097307384697444,
+                    "std": 2.0334196356276575
+                },
+                "id": "S2"
+            }
+        ]
+    ]
+}

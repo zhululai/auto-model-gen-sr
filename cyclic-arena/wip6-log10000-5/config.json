@@ -1,0 +1,16 @@
+{
+    "name": "Cyclic Arena",
+    "work_path": "cyclic-arena/wip6-log10000-5",
+    "file_name": "graph.json",
+    "log": {
+        "path": "log.csv",
+        "mappings": {
+            "station_id": "station",
+            "part_id": "part"
+        }
+    },
+    "generation": {
+        "seize_delay": 0.0,
+        "release_delay": 0.0
+    }
+}

@@ -1,0 +1,16 @@
+{
+    "name": "Serial Arena",
+    "work_path": "serial-arena/wip6-log1000-2",
+    "file_name": "graph.json",
+    "log": {
+        "path": "log.csv",
+        "mappings": {
+            "station_id": "station",
+            "part_id": "part"
+        }
+    },
+    "generation": {
+        "seize_delay": 0.0,
+        "release_delay": 0.0
+    }
+}
