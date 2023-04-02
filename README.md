@@ -9,7 +9,7 @@ This repository is created to share Python scripts, Arena instances and event lo
 
 ## Guide
 
-The scripts have been tested with Python 3.9 on Windows and require the installation of `pandas`, `networkx`, `pygraphwiz`, `numpy` and `matplotlib`. Apart from these Python libraries, you also need to download the latest [Graphwiz Archive](https://graphviz.org/download/#windows) and uncompress it in the same folder. 
+The scripts have been tested with Python 3.9 on Windows and require the installation of `pandas`, `networkx`, `pygraphviz`, `numpy` and `matplotlib`. Apart from these Python libraries, you also need to download the latest [Graphviz Archive](https://graphviz.org/download/#windows) and uncompress it in the same folder. 
 
 Once the runtime environment has been set up, you can try the examples by executing
 
