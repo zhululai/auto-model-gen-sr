@@ -11,11 +11,6 @@ import matplotlib.pyplot as plt
 import matplotlib.colors as cls
 
 
-# Add Graphviz to Windows PATH
-_GRAPHVIZ_PATH = os.path.join('Graphviz', 'bin')
-os.environ['PATH'] += os.pathsep + os.path.abspath(_GRAPHVIZ_PATH)
-
-
 ################################################################################
 # Public functions                                                             #
 ################################################################################
