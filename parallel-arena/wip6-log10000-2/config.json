@@ -1,7 +1,7 @@
 {
     "name": "Parallel Arena",
     "work_path": "parallel-arena/wip6-log10000-2",
-    "file_name": "graph.json",
+    "file_name": "model.json",
     "log": {
         "path": "log.csv",
         "mappings": {

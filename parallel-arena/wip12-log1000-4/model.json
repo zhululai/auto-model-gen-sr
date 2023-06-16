@@ -1,0 +1,111 @@
+{
+    "directed": true,
+    "multigraph": false,
+    "graph": [
+        [
+            "name",
+            "Parallel Arena"
+        ],
+        [
+            "wip_limits",
+            [
+                12
+            ]
+        ],
+        [
+            "generation_time",
+            3.6763720512390137
+        ]
+    ],
+    "nodes": [
+        {
+            "index": 0,
+            "is_source": true,
+            "is_sink": false,
+            "buffer_capacity": 0,
+            "machine_capacity": 2,
+            "processing_time": {
+                "mean": 102.63049450549448,
+                "std": 51.681167341710605
+            },
+            "id": "S1"
+        },
+        {
+            "index": 1,
+            "is_source": false,
+            "is_sink": false,
+            "buffer_capacity": 4,
+            "machine_capacity": 1,
+            "processing_time": {
+                "mean": 149.13953488372096,
+                "std": 74.58027739893338
+            },
+            "id": "S3"
+        },
+        {
+            "index": 2,
+            "is_source": false,
+            "is_sink": true,
+            "buffer_capacity": 6,
+            "machine_capacity": 1,
+            "processing_time": {
+                "mean": 76.42253521126771,
+                "std": 40.893304730896546
+            },
+            "id": "S4"
+        },
+        {
+            "index": 3,
+            "is_source": false,
+            "is_sink": false,
+            "buffer_capacity": 4,
+            "machine_capacity": 1,
+            "processing_time": {
+                "mean": 151.35950413223154,
+                "std": 72.19609605993975
+            },
+            "id": "S2"
+        }
+    ],
+    "adjacency": [
+        [
+            {
+                "routing_probability": 0.5095862764883956,
+                "transfer_time": {
+                    "mean": 9.434782608695652,
+                    "std": 2.061845709423622
+                },
+                "id": "S2"
+            },
+            {
+                "routing_probability": 0.49041372351160445,
+                "transfer_time": {
+                    "mean": 9.680000000000003,
+                    "std": 1.6835336985892841
+                },
+                "id": "S3"
+            }
+        ],
+        [
+            {
+                "routing_probability": 1.0,
+                "transfer_time": {
+                    "mean": 10.020408163265307,
+                    "std": 2.0154589626018122
+                },
+                "id": "S4"
+            }
+        ],
+        [],
+        [
+            {
+                "routing_probability": 1.0,
+                "transfer_time": {
+                    "mean": 9.616666666666665,
+                    "std": 1.957962159800091
+                },
+                "id": "S4"
+            }
+        ]
+    ]
+}

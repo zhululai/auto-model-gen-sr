@@ -1,7 +1,7 @@
 {
     "name": "Serial Arena",
     "work_path": "serial-arena/wip9-log1000-5",
-    "file_name": "graph.json",
+    "file_name": "model.json",
     "log": {
         "path": "log.csv",
         "mappings": {

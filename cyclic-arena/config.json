@@ -1,7 +1,7 @@
 {
     "name": "Cyclic Arena",
     "work_path": "cyclic-arena",
-    "file_name": "graph.json",
+    "file_name": "model.json",
     "log": {
         "path": "log.csv",
         "mappings": {

@@ -6,6 +6,9 @@ import msm_lib as msm
 import matplotlib.pyplot as plt
 import math
 
+plt.rcParams['pdf.fonttype'] = 42
+plt.rcParams['ps.fonttype'] = 42
+
 
 SYSTEM_INSTANCES = ['serial-arena', 'parallel-arena', 'cyclic-arena']
 WIP_LIMITS = [6, 9, 12]
@@ -24,8 +27,8 @@ FIGURES_FOLDER = 'figures'
 #                 config_path = os.path.join(instance, log_id, 'config.json')
 #                 config = msm.load_config(config_path)
 #                 log = msm.load_log(config)
-#                 graph = msm.generate_graph(log, config)
-#                 msm.save_graph(graph, config)
+#                 model = msm.generate_model(log, config)
+#                 msm.save_model(model, config)
 
 
 # Calculate the average generation times of graph models
@@ -40,8 +43,8 @@ for instance in SYSTEM_INSTANCES:
                 log_id = 'wip' + str(limit) + '-log' + str(length) + '-' + str(r)
                 config_path = os.path.join(instance, log_id, 'config.json')
                 config = msm.load_config(config_path)
-                graph = msm.load_graph(config)
-                average_times[instance][length] += graph.graph['generation_time']
+                model = msm.load_model(config)
+                average_times[instance][length] += model.graph['generation_time']
         average_times[instance][length] /= len(WIP_LIMITS) * NUMBER_OF_REPLICAS
 
 
@@ -50,14 +53,16 @@ plt.rcParams.update({'font.size': 16})
 x_ticks = [(i + 1) for i in range(len(SYSTEM_INSTANCES))]
 plt.xticks(x_ticks, [instance[:instance.find('-')].title() for instance in SYSTEM_INSTANCES])
 plt.xlabel('System Instance')
-plt.ylim([0.0, 120.0])
-plt.yticks([10.0 * q for q in range(13)])
+plt.ylim([0.1, 1500.0])
+plt.yticks([10.0 ** (q - 1) for q in range(5)])
 plt.ylabel('Average Generation Time (s)')
 plt.grid(True, axis='y', linestyle=(0, (1, 10)))
 width = 1 / (len(LOG_LENGTHS) + 1)
 x = [p - (len(LOG_LENGTHS) - 1) * (width / 2) for p in x_ticks]
 for length in LOG_LENGTHS:
-    plt.bar(x, [average_times[instance][length] for instance in SYSTEM_INSTANCES], width)
+    y = [average_times[instance][length] for instance in SYSTEM_INSTANCES]
+    bc = plt.bar(x, y, width=width, log=True)
+    plt.bar_label(bc, fmt='%.1f')
     x = [p + width for p in x]
 plt.legend([r'$10^{' + str(round(math.log10(length))) + '}$' for length in LOG_LENGTHS], title='Log Length', ncols=3)
 figure_name = 'generation_times.eps'
@@ -93,7 +98,7 @@ for instance in SYSTEM_INSTANCES:
     config_path = os.path.join(instance, 'config.json')
     config = msm.load_config(config_path)
     config['file_name'] = 'truth.json'
-    truth = msm.load_graph(config)
+    truth = msm.load_model(config)
     for limit in WIP_LIMITS:
         average_errors[instance][limit] = dict()
         for length in LOG_LENGTHS:
@@ -113,7 +118,7 @@ for instance in SYSTEM_INSTANCES:
                 log_id = 'wip' + str(limit) + '-log' + str(length) + '-' + str(r)
                 config_path = os.path.join(instance, log_id, 'config.json')
                 config = msm.load_config(config_path)
-                graph = msm.load_graph(config)
+                model = msm.load_model(config)
 
                 errors = dict()
                 errors['buffer_capacity'] = 0.0
@@ -121,18 +126,18 @@ for instance in SYSTEM_INSTANCES:
                 errors['processing_time'] = dict()
                 errors['processing_time']['mean'] = 0.0
                 errors['processing_time']['std'] = 0.0
-                stations = graph.nodes.keys()
+                stations = model.nodes.keys()
                 for station in stations:
-                    buffer_capacity_error = calculate_error(graph.nodes[station]['buffer_capacity'],
+                    buffer_capacity_error = calculate_error(model.nodes[station]['buffer_capacity'],
                                                             truth.nodes[station]['buffer_capacity'])
                     errors['buffer_capacity'] = max(buffer_capacity_error, errors['buffer_capacity'])
-                    machine_capacity_error = calculate_error(graph.nodes[station]['machine_capacity'],
+                    machine_capacity_error = calculate_error(model.nodes[station]['machine_capacity'],
                                                              truth.nodes[station]['machine_capacity'])
                     errors['machine_capacity'] = max(machine_capacity_error, errors['machine_capacity'])
-                    processing_time_mean_error = calculate_error(graph.nodes[station]['processing_time']['mean'],
+                    processing_time_mean_error = calculate_error(model.nodes[station]['processing_time']['mean'],
                                                                  truth.nodes[station]['processing_time']['mean'])
                     errors['processing_time']['mean'] = max(processing_time_mean_error, errors['processing_time']['mean'])
-                    processing_time_std_error = calculate_error(graph.nodes[station]['processing_time']['std'],
+                    processing_time_std_error = calculate_error(model.nodes[station]['processing_time']['std'],
                                                                 truth.nodes[station]['processing_time']['std'])
                     errors['processing_time']['std'] = max(processing_time_std_error, errors['processing_time']['std'])
 
@@ -140,19 +145,19 @@ for instance in SYSTEM_INSTANCES:
                 errors['transfer_time'] = dict()
                 errors['transfer_time']['mean'] = 0.0
                 errors['transfer_time']['std'] = 0.0
-                connections = graph.edges.keys()
+                connections = model.edges.keys()
                 for connection in connections:
-                    routing_probability_error = calculate_error(graph.edges[connection]['routing_probability'],
+                    routing_probability_error = calculate_error(model.edges[connection]['routing_probability'],
                                                                 truth.edges[connection]['routing_probability'])
                     errors['routing_probability'] = max(routing_probability_error, errors['routing_probability'])
-                    transfer_time_mean_error = calculate_error(graph.edges[connection]['transfer_time']['mean'],
+                    transfer_time_mean_error = calculate_error(model.edges[connection]['transfer_time']['mean'],
                                                                truth.edges[connection]['transfer_time']['mean'])
                     errors['transfer_time']['mean'] = max(transfer_time_mean_error, errors['transfer_time']['mean'])
-                    transfer_time_std_error = calculate_error(graph.edges[connection]['transfer_time']['std'],
+                    transfer_time_std_error = calculate_error(model.edges[connection]['transfer_time']['std'],
                                                               truth.edges[connection]['transfer_time']['std'])
                     errors['transfer_time']['std'] = max(transfer_time_std_error, errors['transfer_time']['std'])
 
-                errors['wip_limit'] = calculate_error(graph.graph['wip_limits'][0], limit)
+                errors['wip_limit'] = calculate_error(model.graph['wip_limits'][0], limit)
 
                 average_errors[instance][limit][length]['buffer_capacity'] += errors['buffer_capacity']
                 average_errors[instance][limit][length]['machine_capacity'] += errors['machine_capacity']
@@ -193,7 +198,7 @@ for instance in SYSTEM_INSTANCES:
         plt.plot(LOG_LENGTHS, [average_errors[instance][limit][length]['transfer_time']['std'] for length in LOG_LENGTHS])
         plt.plot(LOG_LENGTHS, [average_errors[instance][limit][length]['wip_limit'] for length in LOG_LENGTHS])
         if not has_legend:
-            plt.legend([r'$b_{s}$', r'$m_{s}$', r'$\mu(P_{s})$', r'$\sigma(P_{s})$', r'$\beta_{s}$', r'$\mu(T_{s,s\prime})$',
+            plt.legend([r'$b_{s}$', r'$m_{s}$', r'$\mu(P_{s})$', r'$\sigma(P_{s})$', r'$r_{s,s\prime}$', r'$\mu(T_{s,s\prime})$',
                         r'$\sigma(T_{s,s\prime})$', r'$n_{\mathrm{max}}$'], title='Attribute', ncols=2)
             has_legend = True
         figure_name = instance[:instance.find('-')] + '_wip' + str(limit) + '_errors.eps'

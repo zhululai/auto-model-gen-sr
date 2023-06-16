@@ -2,11 +2,11 @@
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://github.com/zhululai/auto-model-gen-sr/blob/master/LICENSE-DATA)
 ![Python: 3.9](https://img.shields.io/badge/Python-3.9-blue.svg)
 
-# Automatic Model Generation through State Reconstruction
+# Automated Model Generation through State Reconstruction
 
 This repository is created to share Python scripts, Arena instances and event logs for reproducing experiment results reported in our paper:
 
-* L. Zhu, G. Lugaresi and A. Matta. **Automatic Generation of Digital Twins for Manufacturing Systems through State Reconstruction**. Submitted to *the 19th IEEE International Conference on Automation Science and Engineering*.
+* L. Zhu, G. Lugaresi and A. Matta. **Automated Generation of Digital Models for Production Lines through State Reconstruction**. Accepted by *the 19th IEEE International Conference on Automation Science and Engineering*.
 
 ## Guide
 
