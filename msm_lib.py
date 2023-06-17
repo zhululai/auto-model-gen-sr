@@ -74,7 +74,7 @@ def generate_model(log, config):
     part_sublogs, station_sublogs = _extract_sublogs(log)
     traces = _collect_traces(part_sublogs)
     _mine_topology(model, traces, station_sublogs)
-    window = [-1, log.shape[0]]
+    window = [-1, len(log)]
     _reconstruct_states(model, part_sublogs, station_sublogs, log, window)
     _mine_capacities(model, log, window)
     _mine_processing_times(model, part_sublogs, log, window, config)
@@ -367,8 +367,10 @@ def _reconstruct_states(model, part_sublogs, station_sublogs, log, window):
                 window[1] = i
 
     stations = model.nodes.keys()
+    log.loc[-1] = [None for _ in log.columns]
+    log.sort_index(inplace=True, kind='stable')
     log['state'] = None
-    for i in range(window[0] + 1, window[1]):
+    for i in range(window[0], window[1]):
         log.at[i, 'state'] = np.full(2 * len(stations), 0)
     for sublog in part_sublogs.values():
         sublog['state'] = None
@@ -377,7 +379,7 @@ def _reconstruct_states(model, part_sublogs, station_sublogs, log, window):
         sublog['state'] = None
         sublog.update(log['state'])
 
-    previous_state = np.full(2 * len(stations), 0)
+    previous_state = log.at[window[0], 'state']
     floor_state = np.full(2 * len(stations), 0)
     for i in range(window[0] + 1, window[1]):
         event = log.loc[i]
@@ -413,7 +415,7 @@ def _reconstruct_states(model, part_sublogs, station_sublogs, log, window):
             floor_state[k_1_l_2] = min(state[k_1_l_2], floor_state[k_1_l_2])
         previous_state = state
 
-    for i in range(window[0] + 1, window[1]):
+    for i in range(window[0], window[1]):
         state = log.at[i, 'state']
         np.subtract(state, floor_state, state)
 
@@ -430,7 +432,7 @@ def _mine_capacities(model, log, window):
     """
     stations = model.nodes.keys()
     ceiling_state = np.full(2 * len(stations), 0)
-    for i in range(window[0] + 1, window[1]):
+    for i in range(window[0], window[1]):
         state = log.at[i, 'state']
         np.maximum(state, ceiling_state, ceiling_state)
 
@@ -455,7 +457,7 @@ def _mine_processing_times(model, part_sublogs, log, window, config):
     means = dict.fromkeys(stations, 0.0)
     tses = dict.fromkeys(stations, 0.0)
     for sublog in part_sublogs.values():
-        for j in range(1, sublog.shape[0]):
+        for j in range(1, len(sublog)):
             i = sublog.index[j]
             if i <= window[0] or i >= window[1]:
                 continue
@@ -476,7 +478,7 @@ def _mine_processing_times(model, part_sublogs, log, window, config):
                 if buffer_state >= buffer_capacity:
                     release_delay = config['generation']['release_delay']
                     event = exit_event
-                    while i - 1 > window[0] \
+                    while i > window[0] \
                             and exit_event['time'] - event['time'] <= release_delay:
                         i -= 1
                         event = log.loc[i]
@@ -510,7 +512,7 @@ def _mine_routing_probabilities(model, part_sublogs, window):
     connection_frequencies = dict()
     station_frequencies = dict()
     for sublog in part_sublogs.values():
-        for j in range(1, sublog.shape[0]):
+        for j in range(1, len(sublog)):
             i = sublog.index[j]
             if i <= window[0] or i >= window[1]:
                 continue
@@ -550,7 +552,7 @@ def _mine_transfer_times(model, part_sublogs, log, window, config):
     means = dict.fromkeys(connections, 0.0)
     tses = dict.fromkeys(connections, 0.0)
     for sublog in part_sublogs.values():
-        for j in range(1, sublog.shape[0]):
+        for j in range(1, len(sublog)):
             i = sublog.index[j]
             if i <= window[0] or i >= window[1]:
                 continue
@@ -570,7 +572,7 @@ def _mine_transfer_times(model, part_sublogs, log, window, config):
             if machine_state >= machine_capacity:
                 seize_delay = config['generation']['seize_delay']
                 event = enter_event
-                while i - 1 > window[0] \
+                while i > window[0] \
                         and enter_event['time'] - event['time'] <= seize_delay:
                     i -= 1
                     event = log.loc[i]
@@ -611,7 +613,7 @@ def _mine_wip_limits(model, log, window):
             state_index_lists[x].append(2 * k + 1)
 
     wip_limits = model.graph['wip_limits']
-    for i in range(window[0] + 1, window[1]):
+    for i in range(window[0], window[1]):
         state = log.at[i, 'state']
         for x in range(len(submodels)):
             wip = sum(state[state_index_lists[x]])
